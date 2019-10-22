@@ -2,6 +2,10 @@
 <img src="figs/CE.jpg" alt="Compound Emotions" width="500"/>
 (Image source: https://www.pnas.org/content/111/15/E1454)
 
+### Test and Train Data-set for base and advance model:
+The images have been shuffeled. After that, it been splitted to two parts. One including 80% of the data for train and the other including 20% of the data for test. You can find the zip file of the data from here and use it for both base and advance model to have a consistent data. 
+https://drive.google.com/drive/folders/1bVaCGC07FlMEY9BsGe9myn_wjUIRMm-q?usp=sharing
+
 ### [Full Project Description](doc/project3_desc.md)
 
 Term: Fall 2019
