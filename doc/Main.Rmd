@@ -10,10 +10,15 @@ In your final repo, there should be an R markdown file that organizes **all comp
 This file is currently a template for running evaluation experiments. You should update it according to your codes but following precisely the same structure. 
 
 ```{r message=FALSE}
-if(!require("EBImage")){
-  source("https://bioconductor.org/biocLite.R")
-  biocLite("EBImage")
-}
+# if(!require("EBImage")){
+#   source("https://bioconductor.org/biocLite.R")
+#   biocLite("EBImage")
+# }
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install()
+
 if(!require("R.matlab")){
   install.packages("R.matlab")
 }
@@ -36,28 +41,44 @@ if(!require("caret")){
   install.packages("caret")
 }
 
+if (!require("OpenImageR")){
+  install.packages("OpenImageR")
+}
+
 library(R.matlab)
 library(readxl)
 library(dplyr)
-library(EBImage)
+# library(EBImage)
+library(BiocManager)
 library(ggplot2)
 library(caret)
+library(OpenImageR)
+```
+### set up the local path for data
+```{r}
+train_label_path = '/Users/fateme/Dropbox/train_set/label.csv'
+train_image_dir <- '/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--group6/data/train_set/images/'
+train_pt_dir <- '/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--group6/data/train_set/points/'
+
+
 ```
 
 ### Step 0 set work directories, extract paths, summarize
 ```{r wkdir, eval=FALSE}
 set.seed(0)
-setwd("~/Project3-FacialEmotionRecognition/doc")
+
+#setwd("~/Project3-FacialEmotionRecognition/doc")
+
 # here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
 # use relative path for reproducibility
 ```
 
 Provide directories for training images. Training images and Training fiducial points will be in different subfolders. 
 ```{r}
-train_dir <- "../data/train_set/" # This will be modified for different data sets.
-train_image_dir <- paste(train_dir, "images/", sep="")
-train_pt_dir <- paste(train_dir,  "points/", sep="")
-train_label_path <- paste(train_dir, "label.csv", sep="") 
+#train_dir <- "../data/train_set/" # This will be modified for different data sets.
+#train_image_dir <- paste(train_dir, "images/", sep="")
+#train_pt_dir <- paste(train_dir,  "points/", sep="")
+#train_label_path <- paste(train_dir, "label.csv", sep="") 
 ```
 
 
@@ -88,6 +109,7 @@ model_labels = paste("KNN with K =", k)
 ### Step 2: import data and train-test split 
 ```{r}
 #train-test split
+
 info <- read.csv(train_label_path)
 n <- nrow(info)
 n_train <- round(n*(4/5), 0)
@@ -129,6 +151,7 @@ save(fiducial_pt_list, file="../output/fiducial_pt_list.RData")
 and the midpoint of the upper lip(52).  For example, the distance of an happy face tends to be shorter than that of a face.
 
 ![Figure1](../figs/feature_visualization.jpg)
+ This are for convinicing your colleague while presentation to show why your feature are informative to use
 
 `feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features and responses that are required by all the models you are going to evaluate later. 
   
@@ -213,16 +236,16 @@ par_best <- list(k = model_best)
 
 * Train the model with the entire training set using the selected model (model parameter) via cross-validation.
 ```{r final_train}
-#tm_train=NA
-#tm_train <- system.time(fit_train <- train(dat_train, par_best))
-#save(fit_train, file="../output/fit_train.RData")
+# tm_train=NA
+# tm_train <- system.time(fit_train <- train(dat_train, par_best))
+# save(fit_train, file="/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--group6/output/fit_train.RData")
 ```
 
 ### Step 5: Run test on test images
 ```{r test}
 tm_test=NA
 if(run.test){
-  load(file="../output/fit_train.RData")
+  #load(file="/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--group6/output/fit_train.RData")
   tm_test <- system.time(pred <- test(model_best, dat_test))
 }
 ```
