@@ -10,7 +10,7 @@ https://drive.google.com/drive/folders/1bVaCGC07FlMEY9BsGe9myn_wjUIRMm-q?usp=sha
 
 Term: Fall 2019
 
-+ Team ##
++ Team 6
 + Team members
 	+ Gong, Yuhan
 	+ Haghpanah,Fateme Sadat
