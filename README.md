@@ -10,13 +10,13 @@ https://drive.google.com/drive/folders/1bVaCGC07FlMEY9BsGe9myn_wjUIRMm-q?usp=sha
 
 Term: Fall 2019
 
-+ Team ##
++ Team 6
 + Team members
-	+ team member 1
-	+ team member 2
-	+ team member 3
-	+ team member 4
-	+ team member 5
+	+ Gong, Yuhan
+	+ Haghpanah,Fateme Sadat
+	+ Li,Sixuan
+	+ Xu, Chang
+	+ Yang, Nan
 
 + Project summary: In this project, we created a classification engine for facial emotion recognition. 
 	
