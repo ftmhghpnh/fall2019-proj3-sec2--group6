@@ -1,0 +1,30 @@
+---
+title: "Splitting the Dataset"
+author: "Fateme Sadat Haghpanah"
+date: "10/22/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{python echo=TRUE, message=FALSE, warning=FALSE}
+import random
+import os
+import shutil
+
+path_img = '/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--group6/data/train_set/images/'
+path_pnt = '/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--group6/data/train_set/points/'
+path_test_img = '/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--group6/data/train_set/test_images/'
+path_test_pnt = '/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--group6/data/train_set/test_points/'
+
+images = os.listdir(path_img)
+random.shuffle(images)
+test_set = images[-len(images)//5:]
+for image in test_set:
+    if image[:-4] != '.jpg':
+        continue
+    shutil.move(os.path.join(path_img, image), os.path.join(path_test_img, image))
+    shutil.move(os.path.join(path_pnt, image[:-4] + '.mat'), os.path.join(path_test_pnt, image[:-4] + '.mat'))
+```

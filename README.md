@@ -2,17 +2,21 @@
 <img src="figs/CE.jpg" alt="Compound Emotions" width="500"/>
 (Image source: https://www.pnas.org/content/111/15/E1454)
 
+### Test and Train Data-set for base and advance model:
+The images have been shuffeled. After that, it been splitted to two parts. One including 80% of the data for train and the other including 20% of the data for test. You can find the zip file of the data from here and use it for both base and advance model to have a consistent data. 
+https://drive.google.com/drive/folders/1bVaCGC07FlMEY9BsGe9myn_wjUIRMm-q?usp=sharing
+
 ### [Full Project Description](doc/project3_desc.md)
 
 Term: Fall 2019
 
-+ Team ##
++ Team 6
 + Team members
-	+ team member 1
-	+ team member 2
-	+ team member 3
-	+ team member 4
-	+ team member 5
+	+ Gong, Yuhan
+	+ Haghpanah,Fateme Sadat
+	+ Li,Sixuan
+	+ Xu, Chang
+	+ Yang, Nan
 
 + Project summary: In this project, we created a classification engine for facial emotion recognition. 
 	
