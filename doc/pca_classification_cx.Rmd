@@ -1,0 +1,96 @@
+---
+title: "PCA Classification"
+author: "Chang Xu"
+output: html_notebook
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+options(mc.cores = parallel::detectCores())
+library(dplyr)
+library(tidyverse)
+library(R.matlab)
+library(caret)
+library(pROC)
+library(gam)
+library(earth)
+library(BART)
+library(e1071)
+library(EBImage)
+library(ggplot2)
+library(xgboost)
+library(randomForest)
+library(doMC)
+library(glmnet)
+library(pamr)
+library(kernlab)
+library(parallelRandomForest)
+```
+
+# load data
+```{r}
+tr_pca <- read.csv("data_train_pca.csv") %>% dplyr::select(-X)
+te_pca <- read.csv("data_test_pca.csv") %>% dplyr::select(-X)
+```
+```{r}
+tr_pca$df_train_Y <- as.factor(tr_pca$df_train_Y)
+colnames(tr_pca)[colnames(tr_pca) == "df_train_Y"] <- "emotion"
+te_pca$emotion <- as.factor(te_pca$emotion)
+```
+
+# LDA
+```{r}
+# 53.8 76.1
+LDA <- train(emotion ~ ., data = tr_pca, method = "lda")
+confusionMatrix(predict(LDA, newdata = te_pca), reference = te_pca$emotion)
+confusionMatrix(predict(LDA, newdata = tr_pca), reference = tr_pca$emotion)
+```
+
+# lda2
+```{r}
+# 53.8 66.8
+LDA2 <- train(emotion ~ ., data = tr_pca, method = "lda2")
+confusionMatrix(predict(LDA2, newdata = te_pca), reference = te_pca$emotion)
+confusionMatrix(predict(LDA2, newdata = tr_pca), reference = tr_pca$emotion)
+```
+
+# Mlda
+```{r}
+# 51 66.3
+Mlda <- train(emotion ~ ., data = tr_pca, method = "Mlda")
+confusionMatrix(predict(Mlda, newdata = te_pca), reference = te_pca$emotion)
+confusionMatrix(predict(Mlda, newdata = tr_pca), reference = tr_pca$emotion)
+```
+
+# PDA
+```{r}
+# 53.8 76.1
+pda <- train(emotion ~ ., data = tr_pca, method = "pda")
+confusionMatrix(predict(pda, newdata = te_pca), reference = te_pca$emotion)
+confusionMatrix(predict(pda, newdata = tr_pca), reference = tr_pca$emotion)
+```
+
+# slda
+```{r}
+# 54.4 66.85
+sLDA <- train(emotion ~ ., data = tr_pca, method = "slda")
+confusionMatrix(predict(sLDA, newdata = te_pca), reference = te_pca$emotion)
+confusionMatrix(predict(sLDA, newdata = tr_pca), reference = tr_pca$emotion)
+
+```
+
+
+# NSC
+```{r}
+# 54.2 67.3
+NSC <- train(emotion ~ ., data = tr_pca, method = "pam", 
+             trControl = ctrl, 
+             tuneGrid = data.frame(.threshold = 0:25))
+confusionMatrix(predict(NSC, newdata = te_pca), reference = te_pca$emotion)
+confusionMatrix(predict(NSC, newdata = tr_pca), reference = tr_pca$emotion)
+```
+
+
