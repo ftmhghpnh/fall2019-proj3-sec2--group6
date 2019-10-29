@@ -1,0 +1,105 @@
+---
+title: "euclidean_PCA_classification"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+options(mc.cores = parallel::detectCores())
+```
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(R.matlab)
+library(caret)
+library(pROC)
+library(gam)
+library(earth)
+library(BART)
+library(e1071)
+#install.packages('HiDimDA',repos='http://cran.rstudio.com/')
+#BiocManager::install("EBImage")
+library(EBImage)
+library(ggplot2)
+library(xgboost)
+library(randomForest)
+#install.packages("doMC", repos="http://R-Forge.R-project.org")
+library(doMC)
+library(glmnet)
+library(pamr)
+library(kernlab)
+library(parallelRandomForest)
+library(HiDimDA)
+
+```
+
+# load data
+```{r}
+tr_pca <- read.csv("F:/columbia/Semester 3/AppliedDataScience/project3/PCA_Euclidean_Features_Train.csv") %>% dplyr::select(-X)
+te_pca <- read.csv("F:/columbia/Semester 3/AppliedDataScience/project3/PCA_Euclidean_Features_Test.csv") %>% dplyr::select(-X)
+```
+
+
+```{r}
+tr_pca$emotion_idx <- as.factor(tr_pca$emotion_idx)
+te_pca$emotion_idx <- as.factor(te_pca$emotion_idx)
+```
+
+
+# LDA
+```{r}
+# 54.69, 68.83   
+LDA <- train(emotion_idx ~ ., data = tr_pca, method = "lda")
+confusionMatrix(predict(LDA, newdata = te_pca), reference = te_pca$emotion_idx)
+confusionMatrix(predict(LDA, newdata = tr_pca), reference = tr_pca$emotion_idx)
+```
+
+# LDA2
+```{r}
+# 54.29,65.68 
+LDA2 <- train(emotion_idx ~ ., data = tr_pca, method = "lda2")
+confusionMatrix(predict(LDA2, newdata = te_pca), reference = te_pca$emotion_idx)
+confusionMatrix(predict(LDA2, newdata = tr_pca), reference = tr_pca$emotion_idx)
+```
+
+# Mlda
+```{r}
+#50.7, 65.48 
+Mlda <- train(emotion_idx ~ ., data = tr_pca, method = "Mlda")
+confusionMatrix(predict(Mlda, newdata = te_pca), reference = te_pca$emotion_idx)
+confusionMatrix(predict(Mlda, newdata = tr_pca), reference = tr_pca$emotion_idx)
+```
+
+
+# PDA
+```{r}
+#54.89,68.83    
+pda <- train(emotion_idx ~ ., data = tr_pca, method = "pda")
+confusionMatrix(predict(pda, newdata = te_pca), reference = te_pca$emotion_idx)
+confusionMatrix(predict(pda, newdata = tr_pca), reference = tr_pca$emotion_idx)
+```
+
+# slda
+```{r}
+#48.7, 57.33
+sLDA <- train(emotion_idx ~ ., data = tr_pca, method = "slda")
+confusionMatrix(predict(sLDA, newdata = te_pca), reference = te_pca$emotion_idx)
+confusionMatrix(predict(sLDA, newdata = tr_pca), reference = tr_pca$emotion_idx)
+
+```
+
+#NSC
+```{r}
+# 49.9, 60.68
+ctrl <- trainControl(method = "cv", number = 10)
+NSC <- train(emotion_idx ~ ., data = tr_pca, method = "pam", 
+             trControl = ctrl, 
+             tuneGrid = data.frame(.threshold = 0:25))
+confusionMatrix(predict(NSC, newdata = te_pca), reference = te_pca$emotion_idx)
+confusionMatrix(predict(NSC, newdata = tr_pca), reference = tr_pca$emotion_idx)
+```
+

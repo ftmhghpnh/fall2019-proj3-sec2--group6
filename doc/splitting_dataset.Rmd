@@ -19,6 +19,9 @@ path_pnt = '/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--g
 path_test_img = '/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--group6/data/train_set/test_images/'
 path_test_pnt = '/Users/fateme/Desktop/Columbia/Semester_3/ADS/fall2019-proj3-sec2--group6/data/train_set/test_points/'
 
+os.mkdir(path_test_img) ## with this command you can create any folder with the given path
+os.mkdir(path_test_pnt)
+
 images = os.listdir(path_img)
 random.shuffle(images)
 test_set = images[-len(images)//5:]
