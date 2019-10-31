@@ -43,17 +43,17 @@ library(caret)
 ### Step 0 set work directories, extract paths, summarize
 ```{r wkdir, eval=FALSE}
 set.seed(0)
-setwd("~/Desktop/proj3-sec2-group6/doc")
+setwd("~/Desktop/test")
 # here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
 # use relative path for reproducibility
 ```
 
 Provide directories for training images. Training images and Training fiducial points will be in different subfolders. 
 ```{r}
-train_dir <- "~/Desktop/proj3-sec2-group6/data/train_set/" # This will be modified for different data sets.
+train_dir <- "~/Desktop/test/test_set_sec2/" # This will be modified for different data sets.
 train_image_dir <- paste(train_dir, "images/", sep="")
 train_pt_dir <- paste(train_dir,  "points/", sep="")
-train_label_path <- paste(train_dir, "label.csv", sep="") 
+train_label_path <- paste(train_dir, "labels_prediction.csv", sep="") 
 ```
 
 
@@ -111,8 +111,7 @@ readMat.matrix <- function(index){
 }
 
 #load fiducial points
-fiducial_pt_list3 <- lapply(1:n_files, readMat.matrix)
-save(fiducial_pt_list3, file="../output/fiducial_pt_list3.RData")
+fiducial_pt_list <- lapply(1:n_files, readMat.matrix)
 ```
 
 ### Step 3: construct features and responses
@@ -133,29 +132,27 @@ and the midpoint of the upper lip(52).  For example, the distance of an happy fa
   + Output: an RData file that contains extracted features and corresponding responses
 
 ```{r feature}
-source("../lib/feature.R")
-#tm_feature_train <- NA
-#if(run.feature.train){
-  #tm_feature_train <- system.time(dat_train2 <- feature(fiducial_pt_list2, train_idx))
-#}
+source("~/Desktop/proj3-sec2-group6/lib/feature_test.R")
 
 tm_feature_test <- NA
 if(run.feature.train){
-  tm_feature_test <- system.time(dat_test2 <- feature(fiducial_pt_list2, test_idx))
+  tm_feature_test <- system.time(dat_test2 <- feature_test(fiducial_pt_list, test_idx))
 }
 
-#save(dat_train2, file="../output/feature_train2.RData")
-#save(dat_test2, file="../output/feature_test2.RData")
-```
 
-
-```{r}
-aaa <- readRDS('~/Desktop/pca_ads_proj3/gbm_base1.rds')
+save(dat_test2, file="~/Desktop/test/feature_test_pre.RData")
 ```
 
 ```{r}
-pred_a <- predict(aaa,newdata=data_test)
-accu <- mean(data_test$emotion_idx == pred_a)
-cat("The accuracy of model: gredient boosting", "is", accu*100, "%.\n")
-confusionMatrix(pred_a, data_test$emotion_idx)
+gbm_base <- readRDS('~/Desktop/pca_ads_proj3/gbm_base1.rds')
 ```
+
+```{r}
+pred <- predict(gbm_base,dat_test2)
+pred
+```
+
+```{r}
+write.csv(pred, file = "~/Desktop/test/Prediction.csv")
+```
+
