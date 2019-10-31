@@ -19,8 +19,23 @@ Term: Fall 2019
 	+ Yang, Nan
 
 + Project summary: In this project, we created a classification engine for facial emotion recognition. 
+
+Several techniques were been used for feature extraction and selection: landmark detection (68 and 81 points) and calculate corresponding Pairwise/Euclidean distance; facial detection and pixels extraction based on cropeed face area; HOG,SIFT,LBP and PCA were also been explored.
+
+17 model were been tried: MLDA, LDA, LDA2, CNN(Pixels),CNN(image Xception) PDA, SLDA, Random Forest, NSC,BART, StepLDA,PDA2,HDA,DDA,NAIVE Bayes, PLSDA and Nnet.
+
+After all these work, eventually we landed on LDA model using PCA on the given 6006 pairwise distances as features to be our improved model (Train accuracy: 66.8% Test accuracy 56.8%)
+
+Our base model (gbm) has train accuracy 100% and test accuracy 45.6%
 	
-**Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
+**Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members approve our work presented in this GitHub repository including this contributions statement. 
+
+ 	+ Gong, Yuhan 
+	+ Haghpanah,Fateme Sadat 
+	+ Li,Sixuan 
+	+ Xu, Chang 
+	+ Yang, Nan 
+
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
