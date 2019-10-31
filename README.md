@@ -29,11 +29,11 @@ Term: Fall 2019
 + Li,Sixuan(presenter): 
 	- Pre - Research on project 3 and create starting code in Python;
 	- Facial detection and croped/resize image; 
-	- landmark detection(68&81 points) cordinates extraction/pairwise distance/euclidean distance; 
-	- CNN's pixels data extraction and processing to create data for CNN model;
+	- landmark detection(68&81 points) cordinates extraction and calculate pairwise distance and euclidean distance; 
+	- CNN's pixels data extraction and processing to create data for CNN model (based on the cropped result of facial detection);
 	- CNN(pixel based model) (worked with Yang, Nan);
 	- Some other data processing work to help other teammate to train model;
-	- XGboost and Adaboost(via python);
+	- Tried XGboost and Adaboost(via python);
 	- Leadership work (arrange group meeting, assign work, active communication with each team member and offer help for each steps)
 
 	
