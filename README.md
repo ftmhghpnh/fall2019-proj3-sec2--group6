@@ -59,7 +59,7 @@ Term: Fall 2019
 
 + Nan Yang: 
 	- Ran the provided main.rmd and worked out the basic gbm model based on the data processed in main.rmd.(100% train accuracy and 45.6 test accuracy. Probably overfitting) 
-        - Worked out CNN model with Sixuan Li and tuned the CNN model to get a better test accuracy. However, CNN did not work(train accuracy reached 90% but test accuracy only reached 34%, and we believed this is because we do not have enough train data set for 22 labels.
+       - Worked out CNN model with Sixuan Li and tuned the CNN model to get a better test accuracy. However, CNN did not work(train accuracy reached 90% but test accuracy only reached 34%, and we believed this is because we do not have enough train data set for 22 labels.
 	- Assisted Sixuan Li to prepare the presentation and provided a series suggestions.
 	- Processed train data for my base model. PCA processing based on this train data too.
 	- Built base piple line and made main.rmd with yuhan.
