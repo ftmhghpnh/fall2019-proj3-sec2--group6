@@ -37,7 +37,11 @@ We have been devided to two subgroups. Yuhan, Fateme, and Change were supposed t
 
 + Chang Xu: Feature Extraction: SIFT; Model Training: Random Forest, Ridge, Lasso, BART, LDA, LDA2, StepLDA, MLDA, SLDA, PDA, PDA2, HDA, DDA, Naive Bayes, PLSDA, NSC, Nnet; Compare and select models with accuracy above 50%: LDA, LDA2, MLDA, PDA, SLDA, NSC.
 
-
++ Nan Yang: Ran the provided main.rmd and worked out the basic gbm model based on the data processed in main.rmd.(100% train accuracy and 45.6 test accuracy. Probably overfitting)
+            Worked out CNN model with Sixuan Li and tuned the CNN model to get a better test accuracy. However, CNN did not work(train accuracy reached 90% but test accuracy only reached 34%, and we believed this is because we do not have enough train data set for 22 labels.
+	    Assisted Sixuan Li to prepare the presentation and provided a series suggestions.
+	    Processed train data for my base model. PCA processing based on this train data too.
+	    Built base piple line and made main.rmd with yuhan.
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
 ```
