@@ -55,6 +55,7 @@ Term: Fall 2019
 	- Completed feature selection by PCA; 
 	- Calculated accuracy and running time on advanced models(Decision Tree, Random Forest, LDA, LDA2, SLDA, MLDA,PDA,NSC); 
 	- Built advance pipeline (main_advance.rmd and relevant advance R function)
+	- Generated the advanced pdf file.
 
 
 + Chang Xu: 
@@ -62,6 +63,7 @@ Term: Fall 2019
 	- Model Training: Random Forest, Ridge, Lasso, BART, LDA, LDA2, StepLDA, MLDA, SLDA, PDA, PDA2, HDA, DDA, Naive Bayes, PLSDA, NSC, Nnet; 
 	- Compare and select models with accuracy above 50%: LDA, LDA2, MLDA, PDA, SLDA, NSC.
 	- Created the LDA model as final model.
+	- Generated the advanced csv file.
 	
 
 + Nan Yang: 
