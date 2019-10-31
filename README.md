@@ -22,7 +22,7 @@ Term: Fall 2019
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md))  All team members approve our work presented in this GitHub repository including this contributions statement. 
 
-**The final model we choosed are the base model created by Yang, Nan and advanced LDA(2 classes) model created by Xu, Chang using PCA methode finished by Gong, Yuhan.**
+**The final model we choosed are the base model created by Yang, Nan and advanced LDA(2 classes) model created by Xu, Chang using PCA methode finished by Gong, Yuhan. Thus these people were been candidated for building the pipeline.**
 
 
 
