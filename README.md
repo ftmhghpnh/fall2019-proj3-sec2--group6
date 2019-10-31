@@ -39,6 +39,7 @@ Term: Fall 2019
 	
 	    
 + Fateme Sadat Haghpanah: 
+	- Research on the feature analysis and emotion detection. Also, dig into project 3 of privious semesters to get idea of how they did their job.
 	- Running the provided main.Rmd and check the errors related to package version and all stuff and debug it all and then pull it again in git for convineiance of other teammate. 
 	- Code the splitting the train and test data set after random reshuffling and save train and test, for using the same set of data during the improving models for the sake of comparison the testing results.
 	- Feature selection: Find the HOG features, create new set of feature by concating the HOG and points provided by instruction team (I did normalize the points in range of 0-1 to increase the similiraty of the features. Also, I have calculated the euclidean distance of the points as a feature set. Also, I used PCA on HOG, concat data set of HOG and normalized point and euclidean distance of the points and created three more set of featrues set. The last thing I have tried based on [here](https://www.researchgate.net/post/Which_is_the_best_algorithm_for_facial_features_Extraction), was the Local Binary Pattern features.
