@@ -18,16 +18,19 @@ Term: Fall 2019
 	+ Xu, Chang
 	+ Yang, Nan
 
-+ Project summary: In this project, we created a classification engine for facial emotion recognition. 
-	
-**Contribution statement**: ([default](doc/a_note_on_contributions.md))  All team members approve our work presented in this GitHub repository including this contributions statement. 
++ Project summary: In this project, we created a classification engine for facial emotion recognition. We tried a lof of feature extraction/selection method including HOG,SIFT, PCA, 68 and 81 landmark detection (pairwise and euclidean distance), pixels extraction based on cropped image after facial detection (for CNN). And also 18 models including three CNN models. At the end we landed on basemodel (gbm) using 6006 pairwise distance (from 78 landmark detection) and LDA(2 classes) using 209 after PCA of base features.  
 
-**The final model we choosed are the base model created by Yang, Nan and advanced LDA(2 classes) model created by Xu, Chang using PCA method finished by Gong, Yuhan. Thus these people were been candidated for building the pipeline.**
+
+	
+**Contribution statement**: ([default](doc/a_note_on_contributions.md))All people contribute equally. All team members approve our work presented in this GitHub repository including this contributions statement. 
+
+**The final model we choosed are the base model created by Yang, Nan and advanced LDA(2 classes) model created by Xu, Chang using PCA methode finished by Gong, Yuhan. Thus these people were been candidated for building the pipeline.**
 
 
 
 + Li,Sixuan(presenter): 
 	- Pre - Research on project 3 and create starting code in Python;
+	- shuffle the 2500 data into seperate csv (test and train) (then Fateme improved the shuffled method and seperate the data into two folder);
 	- Facial detection and croped/resize image; 
 	- landmark detection(68&81 points) cordinates extraction and calculate pairwise distance and euclidean distance; 
 	- CNN's pixels data extraction and processing to create data for CNN model (based on the cropped result of facial detection);
@@ -44,19 +47,22 @@ Term: Fall 2019
 	- Code the splitting the train and test data set after random reshuffling and save train and test, for using the same set of data during the improving models for the sake of comparison the testing results.
 	- Feature selection: Find the HOG features, create new set of feature by concating the HOG and points provided by instruction team (I did normalize the points in range of 0-1 to increase the similiraty of the features. Also, I have calculated the euclidean distance of the points as a feature set. Also, I used PCA on HOG, concat data set of HOG and normalized point and euclidean distance of the points and created three more set of featrues set. The last thing I have tried based on [here](https://www.researchgate.net/post/Which_is_the_best_algorithm_for_facial_features_Extraction), was the Local Binary Pattern features.
 	- Advance Model Training: I tried all the following classifiers on all the features set mentioned above. I have tried linear and non-linear version of SVC with different set of parameteres, RandomForest Classsifer with different parameter, used Multilayer perceptron with different layers, KNN with diferent parameters, the AdaBoostClassifier, and LDA which I got the best result of advance model with LDA. Also, since the best result was 55%, I tried two differnt CNN model. First used simply a CNN classifier and trained it. Secondly, I used one of the existing pre-trained model for image classifying, the Xception and extract and find the features of the data set using this. And add a CNN classifer at the top of that. It did not work on this data set since we had not enough image for using the Deep Learning and the labels were too much in compare to number of images.
-	- Advanced Pipeline Model: Since my model got the best result I was candidate for creating the pipeline, and I did that but in Python icluded in the .Rmd. Then, we decided to have everything in R for decreasing the complication and error rate. So, another teammate create the Pipline too but in the R format.
+	- Advanced Pipeline Model: Create advance model pipeline in Python icluded in the .Rmd. 
 
 
 
 + Yuhan Gong: 
 	- Completed feature selection by PCA; 
 	- Calculated accuracy and running time on advanced models(Decision Tree, Random Forest, LDA, LDA2, SLDA, MLDA,PDA,NSC); 
-	- Built pipeline for advanced model (main_advance.rmd and relevant advance R function)  
+	- Built advance pipeline (main_advance.rmd and relevant advance R function)
+
 
 + Chang Xu: 
 	- Feature Extraction: SIFT; 
 	- Model Training: Random Forest, Ridge, Lasso, BART, LDA, LDA2, StepLDA, MLDA, SLDA, PDA, PDA2, HDA, DDA, Naive Bayes, PLSDA, NSC, Nnet; 
 	- Compare and select models with accuracy above 50%: LDA, LDA2, MLDA, PDA, SLDA, NSC.
+	- Created the LDA model as final model.
+	
 
 + Nan Yang: 
 	- Ran the provided main.rmd and worked out the basic gbm model based on the data processed in main.rmd.(100% train accuracy and 45.6 test accuracy. Probably overfitting) 
