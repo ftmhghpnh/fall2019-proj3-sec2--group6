@@ -23,7 +23,7 @@ Term: Fall 2019
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
 
-+ Yuhan Gong: completed feature selection by PCA, calculated accuracy and running time on advanced models(lda, lda2, slda, mlda,pda,pda,nsc), and built advance pipeline (main_advance.rmd and relevant advance R function)  
++ Yuhan Gong: Completed feature selection by PCA; Calculated accuracy and running time on advanced models(Decision Tree, Random Forest, LDA, LDA2, SLDA, MLDA,PDA,NSC); Built advance pipeline (main_advance.rmd and relevant advance R function)  
 + Chang Xu: Feature Extraction: SIFT; Model Training: Random Forest, Ridge, Lasso, BART, LDA, LDA2, StepLDA, MLDA, SLDA, PDA, PDA2, HDA, DDA, Naive Bayes, PLSDA, NSC, Nnet; Compare and select models with accuracy above 50%: LDA, LDA2, MLDA, PDA, SLDA, NSC.
 
 
