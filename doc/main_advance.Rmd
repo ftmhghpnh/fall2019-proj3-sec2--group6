@@ -1,0 +1,139 @@
+---
+title: "main_advance"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+options(mc.cores = parallel::detectCores())
+```
+
+# load package
+```{r message=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install()
+
+if(!require("R.matlab")){
+  install.packages("R.matlab")
+}
+if(!require("readxl")){
+  install.packages("readxl")
+}
+
+if(!require("dplyr")){
+  install.packages("dplyr")
+}
+if(!require("readxl")){
+  install.packages("readxl")
+}
+
+if(!require("ggplot2")){
+  install.packages("ggplot2")
+}
+
+if(!require("caret")){
+  install.packages("caret")
+}
+
+if (!require("OpenImageR")){
+  install.packages("OpenImageR")
+}
+
+library(BiocManager)
+library(R.matlab)
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(caret)
+library(OpenImageR)
+
+```
+
+
+# set up the local path for data
+```{r}
+local_dir <- "F:/columbia/Semester 3/AppliedDataScience/project3/" 
+```
+
+# load training Rdata
+```{r}
+load(paste(local_dir,'feature_train.RData',sep = ''))
+```
+
+# normalize training set & PCA on training set
+```{r}
+# normalize
+df_train_X <- scale(dat_train[,!(names(dat_train) %in% 'emotion_idx')])
+df_train_Y <- dat_train$emotion_idx
+
+# PCA on training
+source(paste(local_dir,'pca_feature.R',sep = ''))
+
+pca <- pca_feature(df_train_X,threshhold=0.99)
+
+# combine PCA X, Y after PCA
+pca_train <- data.frame(pca$data_X_transformed,emotion_idx=df_train_Y)
+
+```
+
+
+# build advance model on training
+```{r}
+source(paste(local_dir,'train_advance.R',sep = ''))
+
+run.advance.train=TRUE
+tm_advance_train=NA 
+
+if(run.advance.train){
+  tm_advance_train <- system.time(advance_model <- train_advance(pca_train))
+}
+
+```
+
+
+# load & scale on test & transform test into PC dimensions
+```{r}
+load(paste(local_dir,'feature_test.RData',sep = ''))
+
+df_test_X <- scale(dat_test[,!(names(dat_test) %in% 'emotion_idx')])
+df_test_Y <- dat_test$emotion_idx
+
+data_test_X_transformed <-  df_test_X  %*% pca$trans_matrix
+
+# combine test X, Y after PCA
+pca_test <- data.frame(data_test_X_transformed,emotion_idx=df_test_Y)
+
+```
+
+# predict on test - calculate accuracy on test
+```{r}
+source(paste(local_dir,'test_advance.R',sep = ''))
+
+run.advance.test=TRUE
+tm_advance_test=NA
+
+if(run.advance.test){
+  tm_advance_test <- system.time(pred_test_advance <- test_advance(model=advance_model,dat_pca_test=pca_test))
+}
+
+
+cat("The accuracy of advance model(lda2):",confusionMatrix(pred_test_advance,reference = pca_test$emotion_idx)$overall[1]*100, "%.\n")
+
+```
+
+# summarizing running time
+```{r}
+cat("Time for training advance model=", tm_advance_train[1], "s \n")
+cat("Time for testing advance model=", tm_advance_test[1], "s \n")
+```
+
+# save predictions into csv
+```{r}
+write.csv(pred_test_advance, file=paste(local_dir,"pred_test_advance.csv",sep = ''))
+```
+
+
