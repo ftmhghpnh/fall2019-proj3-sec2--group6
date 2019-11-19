@@ -1,0 +1,276 @@
+---
+title: "main"
+output: 
+  html_document:
+    self_contained: no
+---
+
+### Install and load packages we need
+```{r message=FALSE}
+if(!require("EBImage")){
+  source("https://bioconductor.org/biocLite.R")
+  biocLite("EBImage")
+}
+if(!require("R.matlab")){
+  install.packages("R.matlab")
+}
+if(!require("readxl")){
+  install.packages("readxl")
+}
+
+if(!require("dplyr")){
+  install.packages("dplyr")
+}
+if(!require("readxl")){
+  install.packages("readxl")
+}
+
+if(!require("ggplot2")){
+  install.packages("ggplot2")
+}
+
+if(!require("caret")){
+  install.packages("caret")
+}
+
+library(R.matlab)
+library(readxl)
+library(dplyr)
+library(EBImage)
+library(ggplot2)
+library(caret)
+```
+
+### Construct features
+### Step 0 set work directories, extract paths, summarize
+```{r wkdir, eval=FALSE}
+set.seed(0)
+setwd("~/Desktop/proj3-sec2-group6/doc")
+# here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
+# use relative path for reproducibility
+```
+
+Provide directories for training images. Training images and Training fiducial points will be in different subfolders. 
+```{r}
+train_dir <- "../data/train_set/" # This will be modified for different data sets.
+train_image_dir <- paste(train_dir, "images/", sep="")
+train_pt_dir <- paste(train_dir,  "points/", sep="")
+train_label_path <- paste(train_dir, "label.csv", sep="") 
+```
+
+
+### Step 1: set up controls for evaluation experiments.
+
+In this chunk, we have a set of controls for the evaluation experiments. 
+
++ (T/F) cross-validation on the training set
++ (number) K, the number of CV folds
++ (T/F) process features for training set
++ (T/F) run evaluation on an independent test set
++ (T/F) process features for test set
+
+```{r exp_setup}
+run.cv=TRUE # run cross-validation on the training set
+K <- 5  # number of CV folds
+run.feature.train=TRUE # process features for training set
+run.test=TRUE # run evaluation on an independent test set
+run.feature.test=TRUE # process features for test set
+```
+Using cross-validation or independent test set evaluation, we compare the performance of models with different specifications. In this Starter Code, we tune parameter k (number of neighbours) for KNN.
+
+```{r model_setup}
+k = c(5,11,21,31,41,51)
+model_labels = paste("KNN with K =", k)
+```
+
+### Step 2: import data and train-test split 
+```{r}
+#train-test split
+info <- read.csv(train_label_path)
+n <- nrow(info)
+n_train <- round(n*(4/5), 0)
+train_idx <- sample(info$Index, n_train, replace = F)
+test_idx <- setdiff(info$Index,train_idx)
+```
+
+If you choose to extract features from images, such as using Gabor filter, R memory will exhaust all images are read together. The solution is to repeat reading a smaller batch(e.g 100) and process them. 
+```{r}
+n_files <- length(list.files(train_image_dir))
+
+image_list <- list()
+for(i in 1:100){
+   image_list[[i]] <- readImage(paste0(train_image_dir, sprintf("%04d", i), ".jpg"))
+}
+```
+
+Fiducial points are stored in matlab format. In this step, we read them and store them in a list.
+```{r read fiducial points}
+#function to read fiducial points;If you want to process test data(without emotion_idx),use function:feature_test
+#input: index
+#output: matrix of fiducial points corresponding to the index
+readMat.matrix <- function(index){
+     return(round(readMat(paste0(train_pt_dir, sprintf("%04d", index), ".mat"))[[1]],0))
+}
+
+#load fiducial points
+fiducial_pt_list <- lapply(1:n_files, readMat.matrix)
+save(fiducial_pt_list, file="../output/fiducial_pt_list.RData")
+```
+
+### Step 3: construct features and responses
+
++ The follow plots show how pairwise distance between fiducial points can work as feature for facial emotion recognition.
+
+  + In the first column, 78 fiducials points of each emotion are marked in order. 
+  + In the second column distributions of vertical distance between right pupil(1) and  right brow peak(21) are shown in  histograms. For example, the distance of an angry face tends to be shorter than that of a surprised face.
+  + The third column is the distributions of vertical distances between right mouth corner(50)
+and the midpoint of the upper lip(52).  For example, the distance of an happy face tends to be shorter than that of a face.
+
+![Figure1](../figs/feature_visualization.jpg)
+
+`feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features and responses that are required by all the models you are going to evaluate later. 
+  
+  + `feature.R`
+  + Input: list of images or fiducial point
+  + Output: an RData file that contains extracted features and corresponding responses
+
+### Step 4: We need split data intro training and testing set
+```{r feature}
+source("../lib/feature.R")
+tm_feature_train <- NA
+if(run.feature.train){
+  tm_feature_train <- system.time(dat_train <- feature(fiducial_pt_list, train_idx))
+}
+
+tm_feature_test <- NA
+if(run.feature.train){
+  tm_feature_test <- system.time(dat_test <- feature(fiducial_pt_list, test_idx))
+}
+
+# summarizing time for feature construction
+cat("Time for constructing training feature =", tm_feature_train[1], "s \n")
+cat("Time for constructing testing feature =", tm_feature_test[1], "s \n")
+
+save(dat_train, file="../output/feature_train.RData")
+save(dat_test, file="../output/feature_test.RData")
+```
+
+
+### load training and testing Rdata
+```{r}
+load("../output/feature_train.RData")
+load("../output/feature_test.RData")
+```
+
+### base model
+### This is how we work out gbm model, it will take more than 3 hours. Thus I saved the model.
+```{r}
+fitControl <- trainControl(
+  method = "repeatedcv",
+  number = 5,
+  repeats = 1)
+
+gbmGrid <- expand.grid(interaction.depth = 2,
+                       n.trees = 300,
+                       shrinkage = 0.15,
+                       n.minobsinnode = 10)
+
+tm_train_gbm<-system.time(gbmFit_base <- train(emotion_idx~., data = dat_train,
+                method = "gbm",
+                trControl = fitControl,
+                verbose = TRUE,
+                tuneGrid = gbmGrid))
+tm_train_gbm[1]
+saveRDS(gbmFit_base,file = '../lib/gbmFit_base.rds')
+```
+
+### Load the model.
+```{r}
+gbmFit_base <- readRDS('../lib/gbmFit_base.rds')
+```
+
+### Predict the data
+```{r}
+tm_train_base <- system.time(pred0 <- predict(gbmFit_base, newdata = dat_train))
+tm_test_base <- system.time(pred1 <- predict(gbmFit_base, newdata = dat_test))
+
+accu0 <- mean(dat_train$emotion_idx == pred0)
+accu1 <- mean(dat_test$emotion_idx == pred1)
+
+cat("The accuracy of model: gredient boosting on training set", "is", accu0*100, "%.\n")
+cat("The accuracy of model: gredient boosting on testing set", "is", accu1*100, "%.\n")
+#confusionMatrix(pred1, dat_test$emotion_idx)
+```
+
+### summarizing running time for base model
+```{r}
+#cat("Time for building base model=", tm_train_gbm[1], "s \n")
+cat("Time for training base model=", tm_train_base[1], "s \n")
+cat("Time for testing base model=", tm_test_base[1], "s \n")
+```
+
+### advanced model
+
+### normalize training set & PCA on training set
+```{r}
+# normalize
+df_train_X <- scale(dat_train[,!(names(dat_train) %in% 'emotion_idx')])
+df_train_Y <- dat_train$emotion_idx
+
+# PCA on training
+source('../lib/pca_feature.R')
+
+pca <- pca_feature(df_train_X,threshhold=0.99)
+
+# combine PCA X, Y after PCA
+pca_train <- data.frame(pca$data_X_transformed,emotion_idx=df_train_Y)
+
+```
+
+
+### build advance model on training
+```{r}
+source('../lib/train_advance.R')
+
+run.advance.train=TRUE
+tm_advance_train=NA 
+
+if(run.advance.train){
+  tm_advance_lda2 <- system.time(advance_model <- train_advance(pca_train))
+}
+```
+
+### scale on test & transform test into PC dimensions
+```{r}
+df_test_X <- scale(dat_test[,!(names(dat_test) %in% 'emotion_idx')])
+df_test_Y <- dat_test$emotion_idx
+
+data_test_X_transformed <-  df_test_X  %*% pca$trans_matrix
+
+# combine test X, Y after PCA
+pca_test <- data.frame(data_test_X_transformed,emotion_idx=df_test_Y)
+```
+
+### predict on training and testing 
+```{r}
+source('../lib/test_advance.R')
+
+
+tm_advance_train <- system.time(pred_train_advance <- test_advance(model=advance_model,dat_pca_test=pca_train))
+
+tm_advance_test <- system.time(pred_test_advance <- test_advance(model=advance_model,dat_pca_test=pca_test))
+
+
+cat("The accuracy of advance model(lda2) on training set:",confusionMatrix(pred_train_advance,reference = pca_train$emotion_idx)$overall[1]*100, "%.\n")
+
+cat("The accuracy of advance model(lda2) on testing set:",confusionMatrix(pred_test_advance,reference = pca_test$emotion_idx)$overall[1]*100, "%.\n")
+
+```
+
+
+### summarizing running time
+```{r}
+cat("Time for building advance model=", tm_advance_lda2[1], "s \n")
+cat("Time for training advance model=", tm_advance_train[1], "s \n")
+cat("Time for testing advance model=", tm_advance_test[1], "s \n")
+```
